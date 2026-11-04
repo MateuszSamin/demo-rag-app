@@ -3,6 +3,8 @@ from uuid import uuid4
 
 from fastapi import APIRouter, UploadFile, File, HTTPException
 
+from ingestion.pipeline import ingest_pdf
+
 router = APIRouter(prefix="/upload", tags=["upload"])
 
 UPLOAD_DIR = Path("upload")
@@ -22,8 +24,11 @@ async def upload_pdf(file: UploadFile = File(...)):
     with open(file_path, "wb") as buffer:
         buffer.write(await file.read())
 
+    result = ingest_pdf(pdf_path=file_path)
+
     return {
         "message": "File uploaded successfully",
         "filename": file.filename,
         "path": str(file_path),
+        **result,
     }

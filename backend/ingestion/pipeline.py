@@ -11,7 +11,7 @@ def ingest_pdf(pdf_path):
         vector_size = len(embeddings[0]["embedding"])
         create_collection(vector_size=vector_size)
 
-    store_embeddings(embeddings)
+        store_embeddings(embeddings)
 
     return {
         "chunks": len(chunks),
