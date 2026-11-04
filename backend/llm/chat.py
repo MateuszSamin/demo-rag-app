@@ -2,7 +2,7 @@ import ollama
 
 MODEL = "llama3.1:8b"
 
-def chat(question: str, context: str):
+def chat(question: str, context: str, history: str):
     prompt = f"""
         You are only a helpful assistant.
         Answer ONLY using provided context
@@ -12,6 +12,9 @@ def chat(question: str, context: str):
         
         Question: 
         {question}
+        
+        History:
+        {history}
     """
 
     response = ollama.chat(
