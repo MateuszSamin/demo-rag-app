@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, PointStruct, VectorParams
 
@@ -22,3 +24,19 @@ def create_collection(vector_size: int):
             distance=Distance.COSINE
         )
     )
+
+def store_embeddings(embeddings):
+    points = []
+
+    for item in embeddings:
+        points.append(
+            PointStruct(
+                id=str(uuid4()),
+                vector=item["embedding"],
+                payload={
+                    "text": item["text"]
+                }
+            )
+        )
+
+    client.upsert(collection_name=COLLECTION_NAME, points=points)
