@@ -18,7 +18,16 @@ def retrieve(query: str, limit: int = 5):
         limit=limit,
     )
 
-    return [
-        point.payload
-        for point in results.points
-    ]
+    chunks = []
+
+    for point in results.points:
+        chunks.append(
+            {
+                "text": point.payload["text"],
+                "filename": point.payload["filename"],
+                "document_id": point.payload["document_id"],
+                "chunk_index": point.payload["chunk_index"],
+            }
+        )
+
+    return chunks

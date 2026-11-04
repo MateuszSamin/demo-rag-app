@@ -34,9 +34,15 @@ def store_embeddings(embeddings):
                 id=str(uuid4()),
                 vector=item["embedding"],
                 payload={
-                    "text": item["text"]
-                }
+                    "text": item["text"],
+                    "filename": item["filename"],
+                    "document_id": item["document_id"],
+                    "chunk_index": item["chunk_index"],
+                },
             )
         )
 
-    client.upsert(collection_name=COLLECTION_NAME, points=points)
+    client.upsert(
+        collection_name=COLLECTION_NAME,
+        points=points,
+    )

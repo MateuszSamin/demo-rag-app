@@ -14,4 +14,17 @@ def ask(question: str):
         context = context,
     )
 
-    return answer
+    sources = [
+        {
+            "text": chunk["text"],
+            "filename": chunk["filename"],
+            "document_id": chunk["document_id"],
+            "chunk_index": chunk["chunk_index"],
+        }
+        for chunk in chunks
+    ]
+
+    return {
+        "answer": answer,
+        "sources": sources,
+    }

@@ -3,9 +3,9 @@ from ingestion.embedder import embed_text
 from db.qdrant import store_embeddings, create_collection
 
 
-def ingest_pdf(pdf_path):
+def ingest_pdf(pdf_path, document_id, filename):
     chunks = chunk_pdf(pdf_path)
-    embeddings = embed_text(chunks)
+    embeddings = embed_text(chunks, document_id=document_id, filename=filename)
 
     if embeddings:
         vector_size = len(embeddings[0]["embedding"])
