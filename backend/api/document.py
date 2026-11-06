@@ -4,7 +4,7 @@ from db.qdrant import list_documents, delete_document
 
 router = APIRouter(
     prefix="/documents",
-    tags=["Documents"]
+    tags=["documents"]
 )
 
 @router.get("/")
