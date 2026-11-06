@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from db.qdrant import list_documents
+from db.qdrant import list_documents, delete_document
 
 router = APIRouter(
     prefix="/documents",

@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from qdrant_client import QdrantClient
+from qdrant_client.http.models import Filter, FieldCondition, MatchValue
 from qdrant_client.models import Distance, PointStruct, VectorParams
 
 client = QdrantClient("localhost", port=6333)
@@ -78,4 +79,19 @@ def list_documents():
         if offset is None:
             break
 
-        return list(documents.values())
+    return list(documents.values())
+
+def delete_document(document_id):
+    client.delete(
+        collection_name=COLLECTION_NAME,
+        points_selector=Filter(
+            must=[
+                FieldCondition(
+                    key="document_id",
+                    match=MatchValue(
+                        value=document_id,
+                    ),
+                )
+            ]
+        )
+    )
