@@ -48,3 +48,43 @@ def ask_question(question):
     response = requests.post(f"{BACKEND_URL}/chat", json=payload)
     response.raise_for_status()
     return response.json()
+
+def render_sidebar():
+    with st.sidebar:
+        st.title("Documents")
+
+        uploaded_file = st.file_uploader("Choose a file", type=["pdf"])
+        if uploaded_file is not None:
+            if st.button("Upload", use_container_width=True):
+                with st.spinner():
+                    try:
+                        upload_pdf(uploaded_file)
+                        st.toast(f"Successfully uploaded {uploaded_file.name}")
+                        st.session_state.documents = load_documents()
+                        st.rerun()
+                    except requests.RequestException as error:
+                        st.error(f"Upload failed with error: {error}")
+        st.divider()
+
+        st.subheader("Indexed documents")
+
+        if not st.session_state.documents:
+            st.caption("No documents uploaded. Upload a pdf file to get started.")
+        else:
+            for doc in st.session_state.documents:
+                col_name, col_delete = st.columns([4, 1])
+                col_name.write(doc.get("filename", "Unnamed"))
+                if col_delete.button("X", key=f"delete_{doc["document_id"]}", help="Delete document"):
+                    try:
+                        delete_document(doc["document_id"])
+                        st.session_state.documents = load_documents()
+                        st.rerun()
+                    except requests.RequestException as error:
+                        st.error(f"Delete failed with error: {error}")
+
+        st.divider()
+
+        if st.button("New chat", use_container_width=True):
+            st.session_state.messages = []
+            st.session_state.session_id = str(uuid.uuid4())
+            st.rerun()
